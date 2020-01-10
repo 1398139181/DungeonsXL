@@ -22,18 +22,19 @@ import de.erethon.caliburn.item.VanillaItem;
 import de.erethon.commons.misc.BlockUtil;
 import de.erethon.commons.misc.FileUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
+import de.erethon.dungeonsxl.api.sign.DungeonSignType;
+import de.erethon.dungeonsxl.api.world.GameWorld;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
 import de.erethon.dungeonsxl.event.gameworld.GameWorldStartGameEvent;
 import de.erethon.dungeonsxl.event.gameworld.GameWorldUnloadEvent;
 import de.erethon.dungeonsxl.game.Game;
 import de.erethon.dungeonsxl.game.GameRuleProvider;
 import de.erethon.dungeonsxl.mob.DMob;
 import de.erethon.dungeonsxl.player.DGroup;
-import de.erethon.dungeonsxl.sign.DSign;
-import de.erethon.dungeonsxl.sign.DSignType;
-import de.erethon.dungeonsxl.sign.LocationSign;
-import de.erethon.dungeonsxl.sign.MobSign;
-import de.erethon.dungeonsxl.sign.lobby.StartSign;
+import de.erethon.dungeonsxl.api.sign.passive.LocationSign;
+import de.erethon.dungeonsxl.sign.passive.StartSign;
+import de.erethon.dungeonsxl.sign.windup.MobSign;
 import de.erethon.dungeonsxl.trigger.FortuneTrigger;
 import de.erethon.dungeonsxl.trigger.ProgressTrigger;
 import de.erethon.dungeonsxl.trigger.RedstoneTrigger;
@@ -59,7 +60,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
@@ -71,13 +71,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Frank Baumann, Milan Albrecht, Daniel Saukel
  */
-public class DGameWorld extends DInstanceWorld {
-
-    public enum Type {
-        START_FLOOR,
-        END_FLOOR,
-        DEFAULT
-    }
+public class DGameWorld extends DInstanceWorld implements GameWorld {
 
     private CaliburnAPI caliburn;
     private Game game;
@@ -98,9 +92,8 @@ public class DGameWorld extends DInstanceWorld {
     private Set<TeamFlag> teamFlags = new HashSet<>();
 
     private List<ItemStack> secureObjects = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Sign> classesSigns = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<DMob> dMobs = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<DSign> dSigns = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<AbstractDSign> dSigns = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Trigger> triggers = new CopyOnWriteArrayList<>();
 
     DGameWorld(DungeonsXL plugin, DResourceWorld resourceWorld, File folder, World world, int id) {
@@ -166,16 +159,16 @@ public class DGameWorld extends DInstanceWorld {
         int index = getGame().getDGroups().indexOf(dGroup);
 
         // Try the matching location
-        for (DSign dSign : dSigns) {
+        for (AbstractDSign dSign : dSigns) {
             if (dSign instanceof StartSign) {
-                if (((StartSign) dSign).getId() == index) {
+                if (((StartSign) dSign).getGroupId() == index) {
                     return ((LocationSign) dSign).getLocation();
                 }
             }
         }
 
         // Try any location
-        for (DSign dSign : dSigns) {
+        for (AbstractDSign dSign : dSigns) {
             if (dSign instanceof StartSign) {
                 return ((LocationSign) dSign).getLocation();
             }
@@ -284,20 +277,6 @@ public class DGameWorld extends DInstanceWorld {
     }
 
     /**
-     * @return the classes signs
-     */
-    public CopyOnWriteArrayList<Sign> getClassesSigns() {
-        return classesSigns;
-    }
-
-    /**
-     * @param signs the classes signs to set
-     */
-    public void setClasses(CopyOnWriteArrayList<Sign> signs) {
-        classesSigns = signs;
-    }
-
-    /**
      * @return the dMobs
      */
     public CopyOnWriteArrayList<DMob> getDMobs() {
@@ -321,17 +300,17 @@ public class DGameWorld extends DInstanceWorld {
     /**
      * @return the dSigns
      */
-    public CopyOnWriteArrayList<DSign> getDSigns() {
+    public CopyOnWriteArrayList<AbstractDSign> getDSigns() {
         return dSigns;
     }
 
     /**
-     * @param type the DSignType to filter
+     * @param type the DungeonSignType to filter
      * @return the triggers with the type
      */
-    public List<DSign> getDSigns(DSignType type) {
-        List<DSign> dSignsOfType = new ArrayList<>();
-        for (DSign dSign : dSigns) {
+    public List<AbstractDSign> getDSigns(DungeonSignType type) {
+        List<AbstractDSign> dSignsOfType = new ArrayList<>();
+        for (AbstractDSign dSign : dSigns) {
             if (dSign.getType() == type) {
                 dSignsOfType.add(dSign);
             }
@@ -342,7 +321,7 @@ public class DGameWorld extends DInstanceWorld {
     /**
      * @param dSigns the dSigns to set
      */
-    public void setDSigns(CopyOnWriteArrayList<DSign> dSigns) {
+    public void setDSigns(CopyOnWriteArrayList<AbstractDSign> dSigns) {
         this.dSigns = dSigns;
     }
 
@@ -388,7 +367,7 @@ public class DGameWorld extends DInstanceWorld {
         int mobCount = 0;
 
         signs:
-        for (DSign dSign : dSigns) {
+        for (AbstractDSign dSign : dSigns) {
             if (!(dSign instanceof MobSign)) {
                 continue;
             }
@@ -433,10 +412,11 @@ public class DGameWorld extends DInstanceWorld {
 
         isPlaying = true;
 
-        for (DSign dSign : dSigns) {
+        for (AbstractDSign dSign : dSigns) {
             if (dSign != null) {
                 if (!dSign.getType().isOnDungeonInit()) {
-                    dSign.onInit();
+                    dSign.initialize();
+                    dSign.setToAir();
                 }
             }
         }
@@ -449,9 +429,9 @@ public class DGameWorld extends DInstanceWorld {
             ((FortuneTrigger) trigger).onTrigger();
         }
 
-        for (DSign dSign : dSigns) {
+        for (AbstractDSign dSign : dSigns) {
             if (dSign != null && !dSign.isErroneous() && !dSign.hasTriggers()) {
-                dSign.onTrigger();
+                dSign.trigger(null);
             }
         }
     }
@@ -484,7 +464,7 @@ public class DGameWorld extends DInstanceWorld {
     public boolean onBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
-        for (DSign dSign : dSigns) {
+        for (AbstractDSign dSign : dSigns) {
             if (dSign == null) {
                 continue;
             }

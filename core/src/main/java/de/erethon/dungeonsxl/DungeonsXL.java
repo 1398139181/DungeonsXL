@@ -24,11 +24,14 @@ import de.erethon.commons.config.MessageConfig;
 import de.erethon.commons.javaplugin.DREPlugin;
 import de.erethon.commons.javaplugin.DREPluginSettings;
 import de.erethon.commons.misc.FileUtil;
+import de.erethon.commons.misc.Registry;
 import de.erethon.commons.spiget.comparator.VersionComparator;
 import de.erethon.dungeonsxl.adapter.block.BlockAdapter;
 import de.erethon.dungeonsxl.adapter.block.BlockAdapterBlockData;
 import de.erethon.dungeonsxl.adapter.block.BlockAdapterMagicValues;
 import de.erethon.dungeonsxl.announcer.AnnouncerCache;
+import de.erethon.dungeonsxl.api.DungeonsAPI;
+import de.erethon.dungeonsxl.api.sign.DungeonSignType;
 import de.erethon.dungeonsxl.command.DCommandCache;
 import de.erethon.dungeonsxl.config.DMessage;
 import de.erethon.dungeonsxl.config.MainConfig;
@@ -48,8 +51,9 @@ import de.erethon.dungeonsxl.player.DPlayerCache;
 import de.erethon.dungeonsxl.requirement.RequirementTypeCache;
 import de.erethon.dungeonsxl.reward.RewardListener;
 import de.erethon.dungeonsxl.reward.RewardTypeCache;
-import de.erethon.dungeonsxl.sign.DSignTypeCache;
-import de.erethon.dungeonsxl.sign.SignScriptCache;
+import de.erethon.dungeonsxl.sign.DSignListener;
+import de.erethon.dungeonsxl.sign.DSignTypeDefault;
+import de.erethon.dungeonsxl.sign.script.SignScript;
 import de.erethon.dungeonsxl.trigger.TriggerListener;
 import de.erethon.dungeonsxl.trigger.TriggerTypeCache;
 import de.erethon.dungeonsxl.util.PlaceholderUtil;
@@ -60,16 +64,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.Inventory;
 
 /**
- * The main class of DungeonsXL. It contains several important instances and the actions when the plugin is enabled / disabled.
+ * The main class of DungeonsAPI. It contains several important instances and the actions when the plugin is enabled / disabled.
  *
  * @author Frank Baumann, Tobias Schmitz, Daniel Saukel
  */
-public class DungeonsXL extends DREPlugin {
+public class DungeonsXL extends DREPlugin implements DungeonsAPI {
 
     private static DungeonsXL instance;
     private CaliburnAPI caliburn;
@@ -95,7 +98,7 @@ public class DungeonsXL extends DREPlugin {
     private MainConfig mainConfig;
 
     private DCommandCache dCommands;
-    private DSignTypeCache dSigns;
+    private Registry<String, DungeonSignType> dSigns;
     private GameTypeCache gameTypes;
     private RequirementTypeCache requirementTypes;
     private RewardTypeCache rewardTypes;
@@ -106,7 +109,7 @@ public class DungeonsXL extends DREPlugin {
     private DPlayerCache dPlayers;
     private AnnouncerCache announcers;
     private DClassCache dClasses;
-    private SignScriptCache signScripts;
+    private Registry<String, SignScript> signScripts;
     private DWorldCache dWorlds;
 
     private CopyOnWriteArrayList<Game> games = new CopyOnWriteArrayList<>();
@@ -223,35 +226,47 @@ public class DungeonsXL extends DREPlugin {
         requirementTypes = new RequirementTypeCache();
         rewardTypes = new RewardTypeCache();
         triggers = new TriggerTypeCache();
-        dSigns = new DSignTypeCache(this);
+        dSigns = new Registry<>();
         dWorlds = new DWorldCache(this);
         dungeons = new DungeonCache(this);
         protections = new GlobalProtectionCache(this);
         dMobProviders = new ExternalMobProviderCache(this);
         dPlayers = new DPlayerCache(this);
         announcers = new AnnouncerCache(this);
-        dClasses = new DClassCache(this);
-        signScripts = new SignScriptCache();
+        dClasses = new Registry<>();
+        signScripts = new Registry<>();
         dCommands = new DCommandCache(this);
     }
 
     public void initCaches() {
         // Game types
         // Requirements
-        Bukkit.getPluginManager().registerEvents(new RewardListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new TriggerListener(this), this);
-        dSigns.init();
+        manager.registerEvents(new RewardListener(this), this);
+        manager.registerEvents(new TriggerListener(this), this);
+
+        for (DungeonSignType type : DSignTypeDefault.values()) {
+            dSigns.add(type.getName(), type);
+        }
+        manager.registerEvents(new DSignListener(this), this);
+
         dWorlds.init(MAPS);
         dungeons.init(DUNGEONS);
-        Bukkit.getPluginManager().registerEvents(new GlobalProtectionListener(this), this);
+        manager.registerEvents(new GlobalProtectionListener(this), this);
         globalData = new GlobalData(this, new File(getDataFolder(), "data.yml"));
         globalData.load();
         dMobProviders.init();
         dPlayers.init();
         announcers.init(ANNOUNCERS);
         dClasses.init(CLASSES);
-        Bukkit.getPluginManager().registerEvents(new DMobListener(), this);
-        signScripts.init(SIGNS);
+        manager.registerEvents(new DMobListener(), this);
+
+        if (SIGNS.isDirectory()) {
+            for (File scriptFile : FileUtil.getFilesForFolder(SIGNS)) {
+                SignScript script = new SignScript(scriptFile);
+                signScripts.add(script.getName(), script);
+            }
+        }
+
         dCommands.register(this);
     }
 
@@ -330,10 +345,8 @@ public class DungeonsXL extends DREPlugin {
         return mainConfig;
     }
 
-    /**
-     * @return the dSigns
-     */
-    public DSignTypeCache getDSignCache() {
+    @Override
+    public Registry<String, DungeonSignType> getSignTypeRegistry() {
         return dSigns;
     }
 
@@ -408,9 +421,11 @@ public class DungeonsXL extends DREPlugin {
     }
 
     /**
-     * @return the loaded instance of SignScriptCache
+     * Returns the registry of sign scripts.
+     *
+     * @return the registry of sign scripts
      */
-    public SignScriptCache getSignScriptCache() {
+    public Registry<String, SignScript> getSignScriptRegistry() {
         return signScripts;
     }
 

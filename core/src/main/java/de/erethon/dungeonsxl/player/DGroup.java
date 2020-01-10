@@ -19,9 +19,10 @@ package de.erethon.dungeonsxl.player;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.player.PlayerCollection;
 import de.erethon.dungeonsxl.DungeonsXL;
+import de.erethon.dungeonsxl.api.player.PlayerGroup;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
-import de.erethon.dungeonsxl.dungeon.DungeonConfig;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.dungeon.DungeonConfig;
 import de.erethon.dungeonsxl.event.dgroup.DGroupDisbandEvent;
 import de.erethon.dungeonsxl.event.dgroup.DGroupFinishDungeonEvent;
 import de.erethon.dungeonsxl.event.dgroup.DGroupFinishFloorEvent;
@@ -33,7 +34,6 @@ import de.erethon.dungeonsxl.game.Game;
 import de.erethon.dungeonsxl.game.GameRuleProvider;
 import de.erethon.dungeonsxl.requirement.Requirement;
 import de.erethon.dungeonsxl.reward.Reward;
-import de.erethon.dungeonsxl.util.DColor;
 import de.erethon.dungeonsxl.world.DGameWorld;
 import de.erethon.dungeonsxl.world.DResourceWorld;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author Frank Baumann, Daniel Saukel
  */
-public class DGroup {
+public class DGroup implements PlayerGroup {
 
     DungeonsXL plugin;
     DPlayerCache dPlayers;
@@ -73,7 +73,7 @@ public class DGroup {
     private List<Reward> rewards = new ArrayList<>();
     private BukkitTask timeIsRunningTask;
     private DResourceWorld nextFloor;
-    private DColor color;
+    private Color color;
     private int score = 0;
     private int initialLives = -1;
     private int lives = -1;
@@ -82,7 +82,7 @@ public class DGroup {
         this(plugin, "Group#" + counter, player);
     }
 
-    public DGroup(DungeonsXL plugin, Player player, DColor color) {
+    public DGroup(DungeonsXL plugin, Player player, Color color) {
         this(plugin, color.toString() + "#" + counter, player);
     }
 
@@ -170,7 +170,7 @@ public class DGroup {
     /**
      * @param color the color to fetch the name from
      */
-    public void setName(DColor color) {
+    public void setName(Color color) {
         name = color.toString() + "#" + id;
     }
 
@@ -287,26 +287,22 @@ public class DGroup {
 
     /**
      * @param player the player to add
-     * @param silent if messages shall be sent
+     * @param message if messages shall be sent
      */
-    public void addInvitedPlayer(Player player, boolean silent) {
+    public void addInvitedPlayer(Player player, boolean message) {
         if (player == null) {
             return;
         }
 
         if (DGroup.getByPlayer(player) != null) {
-            if (!silent) {
+            if (message) {
                 MessageUtil.sendMessage(getCaptain(), DMessage.ERROR_IN_GROUP.getMessage(player.getName()));
             }
             return;
         }
 
-        if (!silent) {
+        if (message) {
             MessageUtil.sendMessage(player, DMessage.PLAYER_INVITED.getMessage(getCaptain().getName(), name));
-        }
-
-        // Send message
-        if (!silent) {
             sendMessage(DMessage.GROUP_INVITED_PLAYER.getMessage(getCaptain().getName(), player.getName(), name));
         }
 
@@ -316,26 +312,22 @@ public class DGroup {
 
     /**
      * @param player the player to remove
-     * @param silent if messages shall be sent
+     * @param message if messages shall be sent
      */
-    public void removeInvitedPlayer(Player player, boolean silent) {
+    public void removeInvitedPlayer(Player player, boolean message) {
         if (player == null) {
             return;
         }
 
         if (DGroup.getByPlayer(player) != this) {
-            if (!silent) {
+            if (message) {
                 MessageUtil.sendMessage(getCaptain(), DMessage.ERROR_NOT_IN_GROUP.getMessage(player.getName(), name));
             }
             return;
         }
 
-        if (!silent) {
+        if (message) {
             MessageUtil.sendMessage(player, DMessage.PLAYER_UNINVITED.getMessage(player.getName(), name));
-        }
-
-        // Send message
-        if (!silent) {
             for (Player groupPlayer : players.getOnlinePlayers()) {
                 MessageUtil.sendMessage(groupPlayer, DMessage.GROUP_UNINVITED_PLAYER.getMessage(getCaptain().getName(), player.getName(), name));
             }
@@ -344,9 +336,7 @@ public class DGroup {
         invitedPlayers.remove(player.getUniqueId());
     }
 
-    /**
-     * Remove all invitations for players who are not online
-     */
+    @Override
     public void clearOfflineInvitedPlayers() {
         ArrayList<UUID> toRemove = new ArrayList<>();
         for (UUID uuid : invitedPlayers.getUniqueIds()) {
@@ -554,18 +544,18 @@ public class DGroup {
     /**
      * @return the color that represents this group
      */
-    public DColor getDColor() {
+    public Color getDColor() {
         if (color != null) {
             return color;
         } else {
-            return DColor.WHITE;
+            return Color.WHITE;
         }
     }
 
     /**
      * @param color the group color to set
      */
-    public void setDColor(DColor color) {
+    public void setDColor(Color color) {
         this.color = color;
     }
 

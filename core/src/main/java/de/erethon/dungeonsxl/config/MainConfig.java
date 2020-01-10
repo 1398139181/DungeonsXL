@@ -19,9 +19,9 @@ package de.erethon.dungeonsxl.config;
 import de.erethon.commons.config.DREConfig;
 import de.erethon.commons.misc.EnumUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
-import de.erethon.dungeonsxl.util.DColor;
-import static de.erethon.dungeonsxl.util.DColor.*;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
+import de.erethon.dungeonsxl.util.GroupColor;
+import static de.erethon.dungeonsxl.util.GroupColor.*;
 import de.erethon.dungeonsxl.world.WorldConfig;
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class MainConfig extends DREConfig {
     private String tutorialEndGroup = "player";
 
     /* Announcers */
-    private List<DColor> groupColorPriority = new ArrayList<>(Arrays.asList(
+    private List<GroupColor> groupColorPriority = new ArrayList<>(Arrays.asList(
             DARK_BLUE,
             LIGHT_RED,
             YELLOW,
@@ -281,7 +281,7 @@ public class MainConfig extends DREConfig {
     /**
      * @return the group colors
      */
-    public List<DColor> getGroupColorPriority() {
+    public List<GroupColor> getGroupColorPriority() {
         return groupColorPriority;
     }
 
@@ -289,14 +289,14 @@ public class MainConfig extends DREConfig {
      * @param count the group count
      * @return the group color for the count
      */
-    public DColor getGroupColorPriority(int count) {
-        return (count < groupColorPriority.size() && count >= 0) ? groupColorPriority.get(count) : DColor.WHITE;
+    public GroupColor getGroupColorPriority(int count) {
+        return (count < groupColorPriority.size() && count >= 0) ? groupColorPriority.get(count) : GroupColor.WHITE;
     }
 
     /**
      * @param colors the colors to set
      */
-    public void setGroupColorPriority(List<DColor> colors) {
+    public void setGroupColorPriority(List<GroupColor> colors) {
         groupColorPriority = colors;
     }
 
@@ -510,7 +510,7 @@ public class MainConfig extends DREConfig {
 
         if (!config.contains("groupColorPriority")) {
             ArrayList<String> strings = new ArrayList<>();
-            for (DColor color : groupColorPriority) {
+            for (GroupColor color : groupColorPriority) {
                 strings.add(color.toString());
             }
             config.set("groupColorPriority", strings);
@@ -593,7 +593,7 @@ public class MainConfig extends DREConfig {
 
         if (config.getStringList("groupColorPriority").size() < 14) {
             ArrayList<String> strings = new ArrayList<>();
-            for (DColor color : groupColorPriority) {
+            for (GroupColor color : groupColorPriority) {
                 strings.add(color.toString());
             }
             config.set("groupColorPriority", strings);
@@ -605,8 +605,8 @@ public class MainConfig extends DREConfig {
         } else {
             groupColorPriority.clear();
             for (String color : config.getStringList("groupColorPriority")) {
-                DColor dColor = EnumUtil.getEnum(DColor.class, color);
-                if (dColor != null && dColor != DColor.WHITE) {
+                GroupColor dColor = EnumUtil.getEnum(GroupColor.class, color);
+                if (dColor != null && dColor != GroupColor.WHITE) {
                     groupColorPriority.add(dColor);
                 }
             }

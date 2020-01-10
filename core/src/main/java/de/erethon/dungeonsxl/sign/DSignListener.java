@@ -18,6 +18,7 @@ package de.erethon.dungeonsxl.sign;
 
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
 import de.erethon.dungeonsxl.config.DMessage;
 import de.erethon.dungeonsxl.player.DGamePlayer;
 import de.erethon.dungeonsxl.player.DPermission;
@@ -69,17 +70,6 @@ public class DSignListener implements Listener {
                 trigger.onTrigger(player);
             }
         }
-
-        for (Sign classSign : gameWorld.getClassesSigns()) {
-            if (classSign != null) {
-                if (classSign.getLocation().distance(clickedBlock.getLocation()) < 1) {
-                    if (event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                        dPlayer.setDClass(ChatColor.stripColor(classSign.getLine(1)));
-                    }
-                    break;
-                }
-            }
-        }
     }
 
     @EventHandler
@@ -115,7 +105,7 @@ public class DSignListener implements Listener {
                 }
             }
 
-            DSign dsign = DSign.create(plugin, sign, null);
+            AbstractDSign dsign = AbstractDSign.create(plugin, sign, null);
 
             if (dsign == null) {
                 return;
@@ -126,7 +116,7 @@ public class DSignListener implements Listener {
                 return;
             }
 
-            if (dsign.check()) {
+            if (dsign.validate()) {
                 editWorld.registerSign(block);
                 editWorld.getSigns().add(block);
                 MessageUtil.sendMessage(player, DMessage.PLAYER_SIGN_CREATED.getMessage());

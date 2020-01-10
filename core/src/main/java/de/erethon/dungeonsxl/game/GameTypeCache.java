@@ -17,7 +17,7 @@
 package de.erethon.dungeonsxl.game;
 
 import de.erethon.commons.chat.MessageUtil;
-import de.erethon.dungeonsxl.sign.DSign;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class GameTypeCache {
      * @param sign the sign to check
      * @return the game type which has the enum value sign text in the second line of the sign
      */
-    public GameType getBySign(DSign sign) {
+    public GameType getBySign(AbstractDSign sign) {
         String[] lines = sign.getLines();
 
         for (GameType type : types) {

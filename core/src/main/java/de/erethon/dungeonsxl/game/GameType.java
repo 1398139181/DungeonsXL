@@ -16,6 +16,7 @@
  */
 package de.erethon.dungeonsxl.game;
 
+import de.erethon.dungeonsxl.api.game.GameGoal;
 import org.bukkit.GameMode;
 
 /**

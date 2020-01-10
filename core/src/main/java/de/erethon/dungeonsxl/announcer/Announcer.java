@@ -20,11 +20,11 @@ import de.erethon.commons.chat.DefaultFontInfo;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
 import de.erethon.dungeonsxl.event.dgroup.DGroupCreateEvent;
 import de.erethon.dungeonsxl.player.DGroup;
-import de.erethon.dungeonsxl.util.DColor;
 import de.erethon.dungeonsxl.util.GUIUtil;
+import de.erethon.dungeonsxl.util.GroupColor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -350,7 +350,7 @@ public class Announcer {
     public void clickGroupButton(Player player, ItemStack button) {
         DGroup dGroup = getDGroupByButton(button);
         DGroup pGroup = DGroup.getByPlayer(player);
-        DColor color = DColor.getByWoolType(plugin.getCaliburn().getExItem(button));
+        GroupColor color = GroupColor.getByWoolType(plugin.getCaliburn().getExItem(button));
 
         for (DGroup group : dGroups) {
             if (dGroups.contains(pGroup) && pGroup != null && pGroup.isCustom() && pGroup.getCaptain() == player) {
@@ -422,7 +422,7 @@ public class Announcer {
 
             boolean full = playerCount >= maxPlayersPerGroup;
 
-            DColor color = plugin.getMainConfig().getGroupColorPriority(groupCount);
+            GroupColor color = plugin.getMainConfig().getGroupColorPriority(groupCount);
             ItemStack button = color.getWoolMaterial().toItemStack();
             ItemMeta meta = button.getItemMeta();
             meta.setDisplayName(name + (full ? ChatColor.DARK_RED : ChatColor.GREEN) + " [" + playerCount + "/" + maxPlayersPerGroup + "]");

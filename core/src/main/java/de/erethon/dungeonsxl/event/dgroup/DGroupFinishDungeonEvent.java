@@ -16,7 +16,7 @@
  */
 package de.erethon.dungeonsxl.event.dgroup;
 
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
 import de.erethon.dungeonsxl.player.DGroup;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;

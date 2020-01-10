@@ -17,7 +17,7 @@
 package de.erethon.dungeonsxl.world;
 
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.sign.DSign;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -118,7 +118,7 @@ public class SignData {
 
                 Block block = gameWorld.getWorld().getBlockAt(x, y, z);
                 if (block.getState() instanceof Sign) {
-                    DSign dSign = DSign.create(plugin, (Sign) block.getState(), gameWorld);
+                    AbstractDSign dSign = AbstractDSign.create(plugin, (Sign) block.getState(), gameWorld);
                     gameWorld.getDSigns().add(dSign);
                 }
             }

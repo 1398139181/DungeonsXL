@@ -22,7 +22,7 @@ import de.erethon.commons.player.PlayerUtil;
 import de.erethon.commons.player.PlayerWrapper;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
 import de.erethon.dungeonsxl.event.dgroup.DGroupCreateEvent;
 import de.erethon.dungeonsxl.game.Game;
 import de.erethon.dungeonsxl.global.DPortal;

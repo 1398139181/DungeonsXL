@@ -16,6 +16,7 @@
  */
 package de.erethon.dungeonsxl.dungeon;
 
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;

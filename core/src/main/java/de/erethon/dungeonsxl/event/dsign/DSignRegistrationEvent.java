@@ -16,7 +16,7 @@
  */
 package de.erethon.dungeonsxl.event.dsign;
 
-import de.erethon.dungeonsxl.sign.DSign;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
 import de.erethon.dungeonsxl.world.DGameWorld;
 import org.bukkit.block.Sign;
 import org.bukkit.event.Cancellable;
@@ -33,7 +33,7 @@ public class DSignRegistrationEvent extends DSignEvent implements Cancellable {
     private Sign sign;
     private DGameWorld gameWorld;
 
-    public DSignRegistrationEvent(Sign sign, DGameWorld gameWorld, DSign dSign) {
+    public DSignRegistrationEvent(Sign sign, DGameWorld gameWorld, AbstractDSign dSign) {
         super(dSign);
         this.sign = sign;
         this.gameWorld = gameWorld;

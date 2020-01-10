@@ -21,7 +21,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.player.PlayerUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
 import de.erethon.dungeonsxl.event.dplayer.DPlayerKickEvent;
 import de.erethon.dungeonsxl.event.dplayer.instance.DInstancePlayerUpdateEvent;
 import de.erethon.dungeonsxl.event.dplayer.instance.game.DGamePlayerDeathEvent;
@@ -29,7 +29,7 @@ import de.erethon.dungeonsxl.event.dplayer.instance.game.DGamePlayerFinishEvent;
 import de.erethon.dungeonsxl.event.dplayer.instance.game.DGamePlayerRewardEvent;
 import de.erethon.dungeonsxl.event.requirement.RequirementCheckEvent;
 import de.erethon.dungeonsxl.game.Game;
-import de.erethon.dungeonsxl.game.GameGoal;
+import de.erethon.dungeonsxl.api.game.GameGoal;
 import de.erethon.dungeonsxl.game.GameRuleProvider;
 import de.erethon.dungeonsxl.game.GameType;
 import de.erethon.dungeonsxl.game.GameTypeDefault;
@@ -207,16 +207,10 @@ public class DGamePlayer extends DInstancePlayer {
     }
 
     /**
-     * @param className the name of the class to set
+     * @param dClass the class to set
      */
-    public void setDClass(String className) {
-        Game game = Game.getByWorld(getPlayer().getWorld());
-        if (game == null) {
-            return;
-        }
-
-        DClass dClass = plugin.getDClassCache().getByName(className);
-        if (dClass == null || this.dClass == dClass) {
+    public void setDClass(DClass dClass) {
+        if (this.dClass == dClass) {
             return;
         }
         this.dClass = dClass;

@@ -18,13 +18,13 @@ package de.erethon.dungeonsxl.game;
 
 import de.erethon.commons.player.PlayerUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
-import de.erethon.dungeonsxl.dungeon.DungeonConfig;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.dungeon.DungeonConfig;
 import de.erethon.dungeonsxl.global.GameSign;
 import de.erethon.dungeonsxl.player.DGroup;
-import de.erethon.dungeonsxl.sign.DSign;
-import de.erethon.dungeonsxl.sign.MobSign;
+import de.erethon.dungeonsxl.sign.windup.MobSign;
 import de.erethon.dungeonsxl.trigger.ProgressTrigger;
 import de.erethon.dungeonsxl.world.DGameWorld;
 import de.erethon.dungeonsxl.world.DResourceWorld;
@@ -41,7 +41,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Game mostly stores for which purposes and how a {@link de.erethon.dungeonsxl.dungeon.Dungeon} is used, the player groups and the progress.
+ * Game mostly stores for which purposes and how a {@link de.erethon.dungeonsxl.api.dungeon.Dungeon} is used, the player groups and the progress.
  *
  * @author Daniel Saukel
  */
@@ -55,6 +55,7 @@ public class Game {
     private GameType type = GameTypeDefault.DEFAULT;
     private DGameWorld world;
     private GameRuleProvider rules;
+    private boolean classes;
     private int waveCount;
     private Map<String, Integer> gameKills = new HashMap<>();
     private Map<String, Integer> waveKills = new HashMap<>();
@@ -131,7 +132,7 @@ public class Game {
      * @return the dGroups
      */
     public List<DGroup> getDGroups() {
-        return dGroups;
+        return new ArrayList<>(dGroups);
     }
 
     /**
@@ -210,6 +211,20 @@ public class Game {
      */
     public void setRules(GameRuleProvider rules) {
         this.rules = rules;
+    }
+
+    /**
+     * @return if the game uses classes
+     */
+    public boolean hasClasses() {
+        return classes;
+    }
+
+    /**
+     * @param enabled set if the game has classes
+     */
+    public void setClasses(boolean enabled) {
+        classes = enabled;
     }
 
     /**
@@ -407,7 +422,7 @@ public class Game {
                     }
                 }
 
-                for (DSign dSign : world.getDSigns()) {
+                for (AbstractDSign dSign : world.getDSigns()) {
                     if (!(dSign instanceof MobSign)) {
                         continue;
                     }

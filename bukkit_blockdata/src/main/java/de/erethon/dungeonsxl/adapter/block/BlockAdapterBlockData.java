@@ -16,7 +16,7 @@
  */
 package de.erethon.dungeonsxl.adapter.block;
 
-import de.erethon.dungeonsxl.util.DColor;
+import de.erethon.dungeonsxl.util.GroupColor;
 import org.bukkit.Axis;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -51,7 +51,7 @@ public class BlockAdapterBlockData implements BlockAdapter {
     }
 
     @Override
-    public void setBlockWoolColor(Block block, DColor color) {
+    public void setBlockWoolColor(Block block, GroupColor color) {
         block.setType(color.getWoolMaterial().getMaterial());
     }
 

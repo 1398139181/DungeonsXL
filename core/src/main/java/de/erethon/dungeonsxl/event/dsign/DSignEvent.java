@@ -16,7 +16,7 @@
  */
 package de.erethon.dungeonsxl.event.dsign;
 
-import de.erethon.dungeonsxl.sign.DSign;
+import de.erethon.dungeonsxl.api.sign.AbstractDSign;
 import org.bukkit.event.Event;
 
 /**
@@ -24,23 +24,23 @@ import org.bukkit.event.Event;
  */
 public abstract class DSignEvent extends Event {
 
-    protected DSign dSign;
+    protected AbstractDSign dSign;
 
-    public DSignEvent(DSign dSign) {
+    public DSignEvent(AbstractDSign dSign) {
         this.dSign = dSign;
     }
 
     /**
      * @return the dSign
      */
-    public DSign getDSign() {
+    public AbstractDSign getDSign() {
         return dSign;
     }
 
     /**
      * @param dSign the dSign to set
      */
-    public void setDSign(DSign dSign) {
+    public void setDSign(AbstractDSign dSign) {
         this.dSign = dSign;
     }
 
