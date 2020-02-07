@@ -44,9 +44,7 @@ public class DPlayerCache {
         this.plugin = plugin;
     }
 
-    public void init() {
-        config = plugin.getMainConfig();
-
+    public void initPlayerCache() {
         if (config.isSecureModeEnabled()) {
             new SecureModeTask(plugin).runTaskTimer(plugin, config.getSecureModeCheckInterval(), config.getSecureModeCheckInterval());
         }
@@ -54,13 +52,13 @@ public class DPlayerCache {
         new BukkitRunnable() {
             @Override
             public void run() {
-                plugin.getDPlayerCache().getDGamePlayers().forEach(p -> p.update(false));
+                DPlayerCache.this.getDGamePlayers().forEach(p -> p.update(false));
             }
         }.runTaskTimer(plugin, 2L, 2L);
         new BukkitRunnable() {
             @Override
             public void run() {
-                plugin.getDPlayerCache().getDGamePlayers().forEach(p -> p.update(true));
+                DPlayerCache.this.getDGamePlayers().forEach(p -> p.update(true));
             }
         }.runTaskTimer(plugin, 20L, 20L);
 

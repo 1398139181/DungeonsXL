@@ -18,7 +18,7 @@ package de.erethon.dungeonsxl.dungeon;
 
 import de.erethon.commons.config.DREConfig;
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.world.DResourceWorld;
+import de.erethon.dungeonsxl.api.world.ResourceWorld;
 import de.erethon.dungeonsxl.world.WorldConfig;
 import java.io.File;
 import java.util.ArrayList;
@@ -36,9 +36,9 @@ public class DungeonConfig extends DREConfig {
 
     public static final int CONFIG_VERSION = 1;
 
-    private DResourceWorld startFloor;
-    private DResourceWorld endFloor;
-    private List<DResourceWorld> floors = new ArrayList<>();
+    private ResourceWorld startFloor;
+    private ResourceWorld endFloor;
+    private List<ResourceWorld> floors = new ArrayList<>();
     private int floorCount;
     private boolean removeWhenPlayed;
     private WorldConfig overrideValues;
@@ -58,49 +58,49 @@ public class DungeonConfig extends DREConfig {
     /**
      * @return the startFloor
      */
-    public DResourceWorld getStartFloor() {
+    public ResourceWorld getStartFloor() {
         return startFloor;
     }
 
     /**
      * @param startFloor the startFloor to set
      */
-    public void setStartFloor(DResourceWorld startFloor) {
+    public void setStartFloor(ResourceWorld startFloor) {
         this.startFloor = startFloor;
     }
 
     /**
      * @return the endFloor
      */
-    public DResourceWorld getEndFloor() {
+    public ResourceWorld getEndFloor() {
         return endFloor;
     }
 
     /**
      * @param endFloor the endFloor to set
      */
-    public void setEndFloor(DResourceWorld endFloor) {
+    public void setEndFloor(ResourceWorld endFloor) {
         this.endFloor = endFloor;
     }
 
     /**
      * @return the floors
      */
-    public List<DResourceWorld> getFloors() {
+    public List<ResourceWorld> getFloors() {
         return floors;
     }
 
     /**
      * @param resource the resource to add
      */
-    public void addFloor(DResourceWorld resource) {
+    public void addFloor(ResourceWorld resource) {
         floors.add(resource);
     }
 
     /**
      * @param resource the resource to remove
      */
-    public void removeFloor(DResourceWorld resource) {
+    public void removeFloor(ResourceWorld resource) {
         floors.remove(resource);
     }
 
@@ -169,7 +169,7 @@ public class DungeonConfig extends DREConfig {
      * @param resource the DResourceWorld to check
      * @return true if the floor is either in the list or the start / end floor.
      */
-    public boolean containsFloor(DResourceWorld resource) {
+    public boolean containsFloor(ResourceWorld resource) {
         return floors.contains(resource) || startFloor.equals(resource) || endFloor.equals(resource);
     }
 
@@ -178,19 +178,19 @@ public class DungeonConfig extends DREConfig {
      * @return true if the floor is either in the list or the start / end floor.
      */
     public boolean containsFloor(String mapName) {
-        return containsFloor(plugin.getDWorldCache().getResourceByName(mapName));
+        return containsFloor(plugin.getMapRegistry().get(mapName));
     }
 
     @Override
     public void load() {
         for (String floor : config.getStringList("floors")) {
-            DResourceWorld resource = plugin.getDWorldCache().getResourceByName(floor);
+            ResourceWorld resource = plugin.getMapRegistry().get(floor);
             if (resource != null) {
                 floors.add(resource);
             }
         }
-        startFloor = plugin.getDWorldCache().getResourceByName(config.getString("startFloor"));
-        endFloor = plugin.getDWorldCache().getResourceByName(config.getString("endFloor"));
+        startFloor = plugin.getMapRegistry().get(config.getString("startFloor"));
+        endFloor = plugin.getMapRegistry().get(config.getString("endFloor"));
         floorCount = config.getInt("floorCount", floors.size() + 2);
         removeWhenPlayed = config.getBoolean("removeWhenPlayed", removeWhenPlayed);
 

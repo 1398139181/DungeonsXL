@@ -19,7 +19,7 @@ package de.erethon.dungeonsxl.command;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.dungeon.DungeonConfig;
 import de.erethon.dungeonsxl.global.GlobalProtection;
 import de.erethon.dungeonsxl.global.JoinSign;
@@ -66,7 +66,7 @@ public class RenameCommand extends DCommand {
             }
         }
 
-        for (Dungeon dungeon : plugin.getDungeonCache().getDungeons()) {
+        for (XLDungeon dungeon : plugin.getDungeonCache().getDungeons()) {
             DungeonConfig dConfig = dungeon.getConfig();
             FileConfiguration config = dConfig.getConfig();
             File file = dConfig.getFile();
@@ -100,7 +100,7 @@ public class RenameCommand extends DCommand {
             if (!(protection instanceof JoinSign)) {
                 continue;
             }
-            Dungeon dungeon = ((JoinSign) protection).getDungeon();
+            XLDungeon dungeon = ((JoinSign) protection).getDungeon();
             if (dungeon == null) {
                 protection.delete();
                 continue;

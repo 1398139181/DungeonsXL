@@ -19,7 +19,7 @@ package de.erethon.dungeonsxl.game;
 import de.erethon.commons.player.PlayerUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.dungeon.DungeonConfig;
 import de.erethon.dungeonsxl.global.GameSign;
 import de.erethon.dungeonsxl.player.DGroup;
@@ -41,7 +41,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Game mostly stores for which purposes and how a {@link de.erethon.dungeonsxl.dungeon.Dungeon} is used, the player groups and the progress.
+ * Game mostly stores for which purposes and how a {@link de.erethon.dungeonsxl.dungeon.XLDungeon} is used, the player groups and the progress.
  *
  * @author Daniel Saukel
  */
@@ -344,7 +344,7 @@ public class Game {
      *
      * @return the dungeon
      */
-    public Dungeon getDungeon() {
+    public XLDungeon getDungeon() {
         return dGroups.get(0).getDungeon();
     }
 

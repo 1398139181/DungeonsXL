@@ -21,7 +21,7 @@ import de.erethon.commons.player.PlayerCollection;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.api.player.PlayerGroup.Color;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.dungeon.DungeonConfig;
 import de.erethon.dungeonsxl.event.dgroup.DGroupDisbandEvent;
 import de.erethon.dungeonsxl.event.dgroup.DGroupFinishDungeonEvent;
@@ -65,7 +65,7 @@ public class DGroup {
     private Player captain;
     private PlayerCollection players = new PlayerCollection();
     private PlayerCollection invitedPlayers = new PlayerCollection();
-    private Dungeon dungeon;
+    private XLDungeon dungeon;
     private List<DResourceWorld> unplayedFloors = new ArrayList<>();
     private DGameWorld gameWorld;
     private boolean playing;
@@ -102,15 +102,15 @@ public class DGroup {
         id = counter++;
     }
 
-    public DGroup(DungeonsXL plugin, Player player, Dungeon dungeon) {
+    public DGroup(DungeonsXL plugin, Player player, XLDungeon dungeon) {
         this(plugin, "Group#" + counter, player, dungeon);
     }
 
-    public DGroup(DungeonsXL plugin, String name, Player player, Dungeon dungeon) {
+    public DGroup(DungeonsXL plugin, String name, Player player, XLDungeon dungeon) {
         this(plugin, name, player, new ArrayList<Player>(), dungeon);
     }
 
-    public DGroup(DungeonsXL plugin, String name, Player captain, List<Player> players, Dungeon dungeon) {
+    public DGroup(DungeonsXL plugin, String name, Player captain, List<Player> players, XLDungeon dungeon) {
         this.plugin = plugin;
         dPlayers = plugin.getDPlayerCache();
 
@@ -374,7 +374,7 @@ public class DGroup {
     /**
      * @return the dungeon
      */
-    public Dungeon getDungeon() {
+    public XLDungeon getDungeon() {
         return dungeon;
     }
 
@@ -383,7 +383,7 @@ public class DGroup {
      *
      * @param dungeon the dungeon to set
      */
-    public void setDungeon(Dungeon dungeon) {
+    public void setDungeon(XLDungeon dungeon) {
         this.dungeon = dungeon;
         if (dungeon.isMultiFloor()) {
             unplayedFloors = new ArrayList<>(dungeon.getConfig().getFloors());
@@ -405,7 +405,7 @@ public class DGroup {
         } else {
             DResourceWorld resource = plugin.getDWorldCache().getResourceByName(name);
             if (resource != null) {
-                dungeon = new Dungeon(plugin, resource);
+                dungeon = new XLDungeon(plugin, resource);
                 return true;
             }
             return false;

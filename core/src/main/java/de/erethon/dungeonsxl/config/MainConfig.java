@@ -21,7 +21,7 @@ import de.erethon.commons.misc.EnumUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.api.player.PlayerGroup.Color;
 import static de.erethon.dungeonsxl.api.player.PlayerGroup.Color.*;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.world.WorldConfig;
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +63,7 @@ public class MainConfig extends DREConfig {
     /* Tutorial */
     private boolean tutorialActivated = false;
     private String tutorialDungeonName = "tutorial";
-    private Dungeon tutorialDungeon;
+    private XLDungeon tutorialDungeon;
     private String tutorialStartGroup = "default";
     private String tutorialEndGroup = "player";
 
@@ -107,7 +107,7 @@ public class MainConfig extends DREConfig {
     /* Permissions bridge */
     private List<String> editPermissions;
 
-    /* Default Dungeon Settings */
+    /* Default XLDungeon Settings */
     private WorldConfig defaultWorldConfig;
 
     public MainConfig(DungeonsXL plugin, File file) {
@@ -236,7 +236,7 @@ public class MainConfig extends DREConfig {
     /**
      * @return the tutorial dungeon
      */
-    public Dungeon getTutorialDungeon() {
+    public XLDungeon getTutorialDungeon() {
         if (tutorialDungeon == null) {
             tutorialDungeon = plugin.getDungeonCache().getByName(tutorialDungeonName, true);
         }
@@ -246,7 +246,7 @@ public class MainConfig extends DREConfig {
     /**
      * @param dungeon the tutorial dungeon to set
      */
-    public void setTutorialDungeon(Dungeon dungeon) {
+    public void setTutorialDungeon(XLDungeon dungeon) {
         tutorialDungeon = dungeon;
     }
 
@@ -568,7 +568,7 @@ public class MainConfig extends DREConfig {
             config.set("editPermissions", editPermissions);
         }
 
-        /* Default Dungeon Config */
+        /* Default XLDungeon Config */
         if (!config.contains("default")) {
             config.createSection("default");
         }

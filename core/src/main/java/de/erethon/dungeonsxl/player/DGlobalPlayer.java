@@ -22,7 +22,7 @@ import de.erethon.commons.player.PlayerUtil;
 import de.erethon.commons.player.PlayerWrapper;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.event.dgroup.DGroupCreateEvent;
 import de.erethon.dungeonsxl.game.Game;
 import de.erethon.dungeonsxl.global.DPortal;
@@ -354,7 +354,7 @@ public class DGlobalPlayer implements PlayerWrapper {
      * Starts the tutorial
      */
     public void startTutorial() {
-        Dungeon dungeon = plugin.getMainConfig().getTutorialDungeon();
+        XLDungeon dungeon = plugin.getMainConfig().getTutorialDungeon();
         if (dungeon == null) {
             MessageUtil.sendMessage(player, DMessage.ERROR_TUTORIAL_DOES_NOT_EXIST.getMessage());
             return;

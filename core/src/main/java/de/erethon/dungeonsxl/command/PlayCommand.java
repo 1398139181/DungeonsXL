@@ -19,7 +19,7 @@ package de.erethon.dungeonsxl.command;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.event.dgroup.DGroupCreateEvent;
 import de.erethon.dungeonsxl.game.Game;
 import de.erethon.dungeonsxl.player.DGamePlayer;
@@ -58,11 +58,11 @@ public class PlayCommand extends DCommand {
             return;
         }
 
-        Dungeon dungeon = plugin.getDungeonCache().getByName(args[1]);
+        XLDungeon dungeon = plugin.getDungeonCache().getByName(args[1]);
         if (dungeon == null) {
             DResourceWorld resource = instances.getResourceByName(args[1]);
             if (resource != null) {
-                dungeon = new Dungeon(plugin, resource);
+                dungeon = new XLDungeon(plugin, resource);
             } else {
                 MessageUtil.sendMessage(player, DMessage.ERROR_NO_SUCH_DUNGEON.getMessage(args[1]));
                 return;

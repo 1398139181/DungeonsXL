@@ -21,7 +21,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.player.PlayerUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.event.dplayer.DPlayerKickEvent;
 import de.erethon.dungeonsxl.event.dplayer.instance.DInstancePlayerUpdateEvent;
 import de.erethon.dungeonsxl.event.dplayer.instance.game.DGamePlayerDeathEvent;
@@ -658,7 +658,7 @@ public class DGamePlayer extends DInstancePlayer {
         return checkTime(game.getDungeon(), game.getRules().getTimeToNextPlayAfterFinish(), getData().getTimeLastFinished(game.getDungeon().getName()));
     }
 
-    public boolean checkTime(Dungeon dungeon, int requirement, long dataTime) {
+    public boolean checkTime(XLDungeon dungeon, int requirement, long dataTime) {
         if (DPermission.hasPermission(player, DPermission.IGNORE_TIME_LIMIT)) {
             return true;
         }

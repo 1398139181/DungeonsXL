@@ -18,7 +18,7 @@ package de.erethon.dungeonsxl.global;
 
 import de.erethon.commons.misc.BlockUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.util.LWCUtil;
 import de.erethon.dungeonsxl.world.DResourceWorld;
 import java.util.HashSet;
@@ -35,7 +35,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public abstract class JoinSign extends GlobalProtection {
 
-    protected Dungeon dungeon;
+    protected XLDungeon dungeon;
     protected int maxElements;
     protected int startIfElementsAtLeast = -1;
     protected Block startSign;
@@ -51,7 +51,7 @@ public abstract class JoinSign extends GlobalProtection {
         if (dungeon == null) {
             DResourceWorld resource = plugin.getDWorldCache().getResourceByName(identifier);
             if (resource != null) {
-                dungeon = new Dungeon(plugin, resource);
+                dungeon = new XLDungeon(plugin, resource);
             }
         }
 
@@ -74,7 +74,7 @@ public abstract class JoinSign extends GlobalProtection {
         if (dungeon == null) {
             DResourceWorld resource = plugin.getDWorldCache().getResourceByName(identifier);
             if (resource != null) {
-                dungeon = new Dungeon(plugin, resource);
+                dungeon = new XLDungeon(plugin, resource);
             }
         }
 
@@ -99,14 +99,14 @@ public abstract class JoinSign extends GlobalProtection {
     /**
      * @return the dungeon
      */
-    public Dungeon getDungeon() {
+    public XLDungeon getDungeon() {
         return dungeon;
     }
 
     /**
      * @param dungeon the dungeon to set
      */
-    public void setDungeon(Dungeon dungeon) {
+    public void setDungeon(XLDungeon dungeon) {
         this.dungeon = dungeon;
     }
 

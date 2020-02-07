@@ -21,7 +21,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.api.player.PlayerGroup.Color;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.event.dgroup.DGroupCreateEvent;
 import de.erethon.dungeonsxl.player.DGroup;
 import de.erethon.dungeonsxl.util.GUIUtil;
@@ -96,7 +96,7 @@ public class Announcer {
         if (multiFloor) {
             dungeonName = identifier;
 
-            Dungeon dungeon = plugin.getDungeonCache().getByName(identifier);
+            XLDungeon dungeon = plugin.getDungeonCache().getByName(identifier);
             if (dungeon != null) {
                 mapName = dungeon.getConfig().getStartFloor().getName();
             }
@@ -130,7 +130,7 @@ public class Announcer {
         if (multiFloor) {
             dungeonName = identifier;
 
-            Dungeon dungeon = plugin.getDungeonCache().getByName(identifier);
+            XLDungeon dungeon = plugin.getDungeonCache().getByName(identifier);
             if (dungeon != null) {
                 mapName = dungeon.getConfig().getStartFloor().getName();
             }

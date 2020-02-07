@@ -20,7 +20,7 @@ import de.erethon.commons.chat.MessageUtil;
 import de.erethon.commons.misc.NumberUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.dungeon.DungeonConfig;
 import de.erethon.dungeonsxl.player.DPermission;
 import de.erethon.dungeonsxl.world.DEditWorld;
@@ -51,7 +51,7 @@ public class ListCommand extends DCommand {
     @Override
     public void onExecute(String[] args, CommandSender sender) {
         ArrayList<String> dungeonList = new ArrayList<>();
-        for (Dungeon dungeon : plugin.getDungeonCache().getDungeons()) {
+        for (XLDungeon dungeon : plugin.getDungeonCache().getDungeons()) {
             dungeonList.add(dungeon.getName());
         }
         ArrayList<String> mapList = new ArrayList<>();
@@ -75,7 +75,7 @@ public class ListCommand extends DCommand {
         if (args.length >= 2) {
             if (args[1].equalsIgnoreCase("dungeons") || args[1].equalsIgnoreCase("d")) {
                 if (args.length >= 3) {
-                    Dungeon dungeon = plugin.getDungeonCache().getByName(args[2]);
+                    XLDungeon dungeon = plugin.getDungeonCache().getByName(args[2]);
                     if (dungeon != null) {
                         MessageUtil.sendPluginTag(sender, plugin);
                         MessageUtil.sendCenteredMessage(sender, "&4&l[ &6" + dungeon.getName() + " &4&l]");

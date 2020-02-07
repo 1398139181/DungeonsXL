@@ -19,7 +19,7 @@ package de.erethon.dungeonsxl.command;
 import de.erethon.commons.chat.MessageUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
 import de.erethon.dungeonsxl.config.DMessage;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.game.Game;
 import de.erethon.dungeonsxl.game.GameTypeDefault;
 import de.erethon.dungeonsxl.player.DEditPlayer;
@@ -85,7 +85,7 @@ public class TestCommand extends DCommand {
             DEditPlayer editPlayer = (DEditPlayer) dPlayer;
             editPlayer.leave();
             DResourceWorld resource = editPlayer.getEditWorld().getResource();
-            Dungeon dungeon = new Dungeon(plugin, resource);
+            XLDungeon dungeon = new XLDungeon(plugin, resource);
             DGameWorld instance = resource.instantiateAsGameWorld(false);
             if (instance == null) {
                 MessageUtil.sendMessage(player, DMessage.ERROR_TOO_MANY_INSTANCES.getMessage());

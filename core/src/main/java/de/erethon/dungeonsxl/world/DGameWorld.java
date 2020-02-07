@@ -22,7 +22,7 @@ import de.erethon.caliburn.item.VanillaItem;
 import de.erethon.commons.misc.BlockUtil;
 import de.erethon.commons.misc.FileUtil;
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.dungeon.Dungeon;
+import de.erethon.dungeonsxl.dungeon.XLDungeon;
 import de.erethon.dungeonsxl.event.gameworld.GameWorldStartGameEvent;
 import de.erethon.dungeonsxl.event.gameworld.GameWorldUnloadEvent;
 import de.erethon.dungeonsxl.game.Game;
@@ -408,10 +408,10 @@ public class DGameWorld extends DInstanceWorld {
     }
 
     /**
-     * @return the Dungeon that contains the DGameWorld
+     * @return the XLDungeon that contains the DGameWorld
      */
-    public Dungeon getDungeon() {
-        for (Dungeon dungeon : plugin.getDungeonCache().getDungeons()) {
+    public XLDungeon getDungeon() {
+        for (XLDungeon dungeon : plugin.getDungeonCache().getDungeons()) {
             if (dungeon.getConfig().containsFloor(getResource())) {
                 return dungeon;
             }

@@ -17,7 +17,8 @@
 package de.erethon.dungeonsxl.dungeon;
 
 import de.erethon.dungeonsxl.DungeonsXL;
-import de.erethon.dungeonsxl.world.DResourceWorld;
+import de.erethon.dungeonsxl.api.dungeon.Dungeon;
+import de.erethon.dungeonsxl.api.world.ResourceWorld;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,13 +30,13 @@ import java.util.List;
  *
  * @author Daniel Saukel
  */
-public class Dungeon {
+public class XLDungeon implements Dungeon {
 
     private DungeonsXL plugin;
 
     private String name;
     private DungeonConfig config;
-    private DResourceWorld map;
+    private ResourceWorld map;
 
     /**
      * Real dungeon
@@ -43,7 +44,7 @@ public class Dungeon {
      * @param plugin the plugin instance
      * @param file   the file to load from
      */
-    public Dungeon(DungeonsXL plugin, File file) {
+    public XLDungeon(DungeonsXL plugin, File file) {
         this.plugin = plugin;
 
         name = file.getName().replaceAll(".yml", "");
@@ -57,45 +58,34 @@ public class Dungeon {
      * @param plugin   the plugin instance
      * @param resource the only resource world
      */
-    public Dungeon(DungeonsXL plugin, DResourceWorld resource) {
+    public XLDungeon(DungeonsXL plugin, ResourceWorld resource) {
         this.plugin = plugin;
 
         name = resource.getName();
         map = resource;
     }
 
-    /**
-     * @return the name
-     */
+    @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the config
-     */
     public DungeonConfig getConfig() {
         return config;
     }
 
-    /**
-     * @return if this dungeon has multiple floors
-     */
+    @Override
     public boolean isMultiFloor() {
         return config != null;
     }
 
-    /**
-     * @return the floors of the dungeon
-     */
-    public List<DResourceWorld> getFloors() {
+    @Override
+    public List<ResourceWorld> getFloors() {
         if (isMultiFloor()) {
             return config.getFloors();
         } else {
@@ -103,25 +93,21 @@ public class Dungeon {
         }
     }
 
-    /**
-     * @return the SFD map / start floor
-     */
-    public DResourceWorld getMap() {
+    @Override
+    public ResourceWorld getMap() {
         return map;
     }
 
     /**
      * @param map the SFD map / start floor to set
      */
-    public void setMap(DResourceWorld map) {
+    public void setMap(ResourceWorld map) {
         this.map = map;
     }
 
-    /**
-     * @return false if there are setup errors
-     */
+    @Override
     public boolean isSetupCorrect() {
-        for (DResourceWorld resource : plugin.getDWorldCache().getResources()) {
+        for (ResourceWorld resource : plugin.getMapRegistry()) {
             if (resource.getName().equals(name)) {
                 return false;
             }
